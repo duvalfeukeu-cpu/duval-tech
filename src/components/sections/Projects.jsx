@@ -6,7 +6,7 @@ const projects = [
         description:
             "Mon site e-commerce 'DUVAL-SHOP' POUR e-commerce",
         image:
-            "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
+            "https://i.postimg.cc/P5mnd1y0/shap.png",
         technologies: ["React.js", "Tailwind",],
         github: "https://github.com/duvalfeukeu-cpu/site-e-commerce",
         demo: "https://duval-shop-2026.netlify.app",
@@ -17,7 +17,7 @@ const projects = [
         description:
             "Plateforme de TODO-list pour planifier son temps et mieux optimiser sa journee",
         image:
-            "https://images.unsplash.com/photo-1516321318423-f06f85e504b3",
+            "https://i.postimg.cc/grFt7BCp/list.png",
         technologies: ["html", "boostrap", "java-script"],
         github: "https://github.com/duvalfeukeu-cpu",
         demo: "https://todo-liste-duval-tech.netlify.app",
@@ -27,7 +27,7 @@ const projects = [
         description:
             "Plateforme de e-commerce de ventes de voitures (mon premier projets)",
         image:
-            "https://images.unsplash.com/photo-1516321318423-f06f85e504b3",
+            "https://i.postimg.cc/BvHthVfZ/deal.png",
         technologies: ["html", "css", "java script"],
         github: "https://github.com/duvalfeukeu-cpu",
         demo: "https://autodeal-iota.vercel.app/",
@@ -49,7 +49,7 @@ const projects = [
         description:
             "site de contes d'histoire pour les petits enfants ",
         image:
-            "https://images.unsplash.com/photo-1677442136019-21780ecad995",
+            "https://i.postimg.cc/D0BSr43k/fable.png",
         technologies: ["boostrap", "java-script",],
         github: "https://github.com/duvalfeukeu-cpu",
         demo: "https://site-bootdtrap.vercel.app/",
@@ -191,7 +191,7 @@ const Projects = () => {
                     hover:bg-blue-700
                   "
                                     >
-                                        Demo
+                                        voir
                                     </a>
 
                                 </div>
