@@ -1,62 +1,21 @@
 import { motion } from "framer-motion";
-
-const projects = [
-    {
-        title: "DUVAL-SHOP",
-        description:
-            "Mon site e-commerce 'DUVAL-SHOP' POUR e-commerce",
-        image:
-            "https://i.postimg.cc/P5mnd1y0/shap.png",
-        technologies: ["React.js", "Tailwind",],
-        github: "https://github.com/duvalfeukeu-cpu/site-e-commerce",
-        demo: "https://duval-shop-2026.netlify.app",
-    },
-
-    {
-        title: "TODO-list",
-        description:
-            "Plateforme de TODO-list pour planifier son temps et mieux optimiser sa journee",
-        image:
-            "https://i.postimg.cc/grFt7BCp/list.png",
-        technologies: ["html", "boostrap", "java-script"],
-        github: "https://github.com/duvalfeukeu-cpu",
-        demo: "https://todo-liste-duval-tech.netlify.app",
-    },
-    {
-        title: "site AUtodeal",
-        description:
-            "Plateforme de e-commerce de ventes de voitures (mon premier projets)",
-        image:
-            "https://i.postimg.cc/BvHthVfZ/deal.png",
-        technologies: ["html", "css", "java script"],
-        github: "https://github.com/duvalfeukeu-cpu",
-        demo: "https://autodeal-iota.vercel.app/",
-    },
-
-
-    {
-        title: "API e-commerce",
-        description:
-            "API du site e-commerce de Duval-shop ",
-        image:
-            "https://images.unsplash.com/photo-1677442136019-21780ecad995",
-        technologies: ["mongoDB", "java-script", "API"],
-        github: "https://github.com/duvalfeukeu-cpu",
-        demo: "#",
-    },
-    {
-        title: " site de contes d'histoire",
-        description:
-            "site de contes d'histoire pour les petits enfants ",
-        image:
-            "https://i.postimg.cc/D0BSr43k/fable.png",
-        technologies: ["boostrap", "java-script",],
-        github: "https://github.com/duvalfeukeu-cpu",
-        demo: "https://site-bootdtrap.vercel.app/",
-    },
-];
+import { useEffect, useState } from "react";
 
 const Projects = () => {
+    const [projects, setProjects] = useState([]);
+
+   useEffect(() => {
+    fetch("http://localhost:5000/api/projects")
+        .then((res) => res.json())
+        .then((data) => {
+            console.log("PROJETS RECUS =", data);
+            setProjects(data);
+        })
+        .catch((err) => {
+            console.error("Erreur :", err);
+        });
+}, []);
+
     return (
         <section
             id="projects"
@@ -93,7 +52,7 @@ const Projects = () => {
 
                     {projects.map((project, index) => (
                         <motion.div
-                            key={index}
+                            key={project.id || index}
                             initial={{ opacity: 0, y: 40 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
@@ -105,15 +64,15 @@ const Projects = () => {
                                 y: -10,
                             }}
                             className="
-              bg-white
-              rounded-3xl
-              overflow-hidden
-              border
-              border-slate-200
-              shadow-lg
-              hover:shadow-2xl
-              transition-all
-            "
+                                bg-white
+                                rounded-3xl
+                                overflow-hidden
+                                border
+                                border-slate-200
+                                shadow-lg
+                                hover:shadow-2xl
+                                transition-all
+                            "
                         >
                             {/* Image */}
 
@@ -121,10 +80,10 @@ const Projects = () => {
                                 src={project.image}
                                 alt={project.title}
                                 className="
-                w-full
-                h-56
-                object-cover
-              "
+                                    w-full
+                                    h-56
+                                    object-cover
+                                "
                             />
 
                             {/* Content */}
@@ -139,59 +98,69 @@ const Projects = () => {
                                     {project.description}
                                 </p>
 
-                                {/* Tech Stack */}
+                                {/* Technologies */}
 
                                 <div className="flex flex-wrap gap-2 mt-6">
 
-                                    {project.technologies.map((tech, i) => (
-                                        <span
-                                            key={i}
-                                            className="
-                      px-3 py-1
-                      bg-blue-50
-                      text-blue-600
-                      rounded-full
-                      text-sm
-                    "
-                                        >
-                                            {tech}
-                                        </span>
-                                    ))}
+                                    {project.technologies
+                                        ?.split(",")
+                                        .map((tech, i) => (
+                                            <span
+                                                key={i}
+                                                className="
+                                                    px-3
+                                                    py-1
+                                                    bg-blue-50
+                                                    text-blue-600
+                                                    rounded-full
+                                                    text-sm
+                                                "
+                                            >
+                                                {tech.trim()}
+                                            </span>
+                                        ))}
 
                                 </div>
 
-                                {/* Buttons */}
+                                {/* Boutons */}
 
                                 <div className="flex gap-3 mt-8">
 
                                     <a
                                         href={project.github}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="
-                    flex-1
-                    text-center
-                    py-3
-                    rounded-xl
-                    border
-                    border-slate-300
-                    hover:border-blue-500
-                  "
+                                            flex-1
+                                            text-center
+                                            py-3
+                                            rounded-xl
+                                            border
+                                            border-slate-300
+                                            hover:border-blue-500
+                                            hover:bg-slate-50
+                                            transition
+                                        "
                                     >
                                         GitHub
                                     </a>
 
                                     <a
                                         href={project.demo}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="
-                    flex-1
-                    text-center
-                    py-3
-                    rounded-xl
-                    bg-blue-600
-                    text-white
-                    hover:bg-blue-700
-                  "
+                                            flex-1
+                                            text-center
+                                            py-3
+                                            rounded-xl
+                                            bg-blue-600
+                                            text-white
+                                            hover:bg-blue-700
+                                            transition
+                                        "
                                     >
-                                        voir
+                                        Voir
                                     </a>
 
                                 </div>
