@@ -1,5 +1,7 @@
-console.log("SERVER DEMARRE");
-console.log("VERSION TEST 999");
+require("dotenv").config();
+
+console.log("URL =", process.env.SUPABASE_URL);
+console.log("KEY =", process.env.SUPABASE_KEY ? "OK" : "MANQUANTE");
 
 const express = require("express");
 const cors = require("cors");
@@ -9,6 +11,15 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+/* ==========================
+   LOG DES REQUETES
+========================== */
+
+app.use((req, res, next) => {
+  console.log(req.method, req.url);
+  next();
+});
 
 /* ==========================
    ROUTE PRINCIPALE
@@ -43,27 +54,22 @@ app.post("/test-post", (req, res) => {
 ========================== */
 
 app.get("/api/projects", async (req, res) => {
-  try {
-    const { data, error } = await supabase
-      .from("projects")
-      .select("*");
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*");
 
-    if (error) {
-      return res.status(500).json(error);
-    }
+  console.log("DATA =", data);
+  console.log("ERROR =", error);
 
-    res.json(data);
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      error: "Erreur serveur"
-    });
+  if (error) {
+    return res.status(500).json(error);
   }
+
+  res.json(data);
 });
 
 /* ==========================
-   AJOUTER UN PROJET
+   AJOUTER PROJET
 ========================== */
 
 app.post("/api/projects", async (req, res) => {
@@ -96,7 +102,6 @@ app.post("/api/projects", async (req, res) => {
 
     if (error) {
       console.log("ERREUR SUPABASE :", error);
-
       return res.status(500).json(error);
     }
 
@@ -106,13 +111,13 @@ app.post("/api/projects", async (req, res) => {
     console.error(err);
 
     res.status(500).json({
-      error: "Erreur serveur"
+      message: err.message
     });
   }
 });
 
 /* ==========================
-   MODIFIER UN PROJET
+   MODIFIER PROJET
 ========================== */
 
 app.put("/api/projects/:id", async (req, res) => {
@@ -151,13 +156,13 @@ app.put("/api/projects/:id", async (req, res) => {
     console.error(err);
 
     res.status(500).json({
-      error: "Erreur serveur"
+      message: err.message
     });
   }
 });
 
 /* ==========================
-   SUPPRIMER UN PROJET
+   SUPPRIMER PROJET
 ========================== */
 
 app.delete("/api/projects/:id", async (req, res) => {
@@ -181,7 +186,7 @@ app.delete("/api/projects/:id", async (req, res) => {
     console.error(err);
 
     res.status(500).json({
-      error: "Erreur serveur"
+      message: err.message
     });
   }
 });
@@ -189,14 +194,8 @@ app.delete("/api/projects/:id", async (req, res) => {
 /* ==========================
    DEMARRAGE SERVEUR
 ========================== */
-app.use((req, res, next) => {
-  console.log(req.method, req.url);
-  next();
-});
 
 const PORT = 5000;
-
-console.log("AVANT APP LISTEN");
 
 app.listen(PORT, () => {
   console.log(`Serveur lancé sur le port ${PORT}`);
