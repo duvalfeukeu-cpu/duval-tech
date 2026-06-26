@@ -22,7 +22,7 @@ const Admin = () => {
 
   try {
     const response = await fetch(
-      "http://localhost:5000/api/projects",
+      "https://duval-tech-api.onrender.com",
       {
         method: "POST",
         headers: {
