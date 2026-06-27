@@ -5,7 +5,7 @@ const Projects = () => {
     const [projects, setProjects] = useState([]);
 
    useEffect(() => {
-    fetch("https://duval-tech-api.onrender.com")
+   fetch("https://duval-tech-api.onrender.com/api/projects")
         .then((res) => res.json())
         .then((data) => {
             console.log("PROJETS RECUS =", data);

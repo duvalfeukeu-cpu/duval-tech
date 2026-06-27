@@ -22,8 +22,8 @@ const Admin = () => {
 
   try {
     const response = await fetch(
-      "https://duval-tech-api.onrender.com",
-      {
+    "https://duval-tech-api.onrender.com/api/projects", 
+    {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
