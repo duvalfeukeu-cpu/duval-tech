@@ -1,11 +1,18 @@
 require("dotenv").config();
 
-console.log("URL =", process.env.SUPABASE_URL);
-console.log("KEY =", process.env.SUPABASE_KEY ? "OK" : "MANQUANTE");
-
 const express = require("express");
 const cors = require("cors");
+
 const supabase = require("./config/supabase");
+
+const uploadRoutes = require("./routes/uploadRoutes");
+const skillsRoutes = require("./routes/skillsRoutes");
+
+console.log("URL =", process.env.SUPABASE_URL);
+console.log(
+  "KEY PREFIX =",
+  process.env.SUPABASE_KEY?.substring(0, 30)
+);
 
 const app = express();
 
@@ -190,6 +197,17 @@ app.delete("/api/projects/:id", async (req, res) => {
     });
   }
 });
+/* ==========================
+   UPLOAD IMAGE
+========================== */
+
+app.use("/api/upload", uploadRoutes);
+
+/* ==========================
+   SKILLS ROUTES
+========================== */
+
+app.use("/api/skills", skillsRoutes);
 
 /* ==========================
    DEMARRAGE SERVEUR
