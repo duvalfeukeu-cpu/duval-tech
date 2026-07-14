@@ -7,13 +7,13 @@ const supabase = require("./config/supabase");
 
 const uploadRoutes = require("./routes/uploadRoutes");
 const skillsRoutes = require("./routes/skillsRoutes");
+const messageRoutes = require("./routes/messagesRoutes");
 
 console.log("URL =", process.env.SUPABASE_URL);
 console.log(
   "KEY PREFIX =",
   process.env.SUPABASE_KEY?.substring(0, 30)
 );
-
 const app = express();
 
 app.use(cors());
@@ -202,6 +202,11 @@ app.delete("/api/projects/:id", async (req, res) => {
 ========================== */
 
 app.use("/api/upload", uploadRoutes);
+/* ==========================
+   MESSAGES
+========================== */
+
+app.use("/api/messages", messageRoutes);
 
 /* ==========================
    SKILLS ROUTES
