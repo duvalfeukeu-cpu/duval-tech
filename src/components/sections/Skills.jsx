@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const API = "http://localhost:5000/api/skills";
+const API = "https://duval-tech-api.onrender.com/api/skills";
 
 const Skills = () => {
   const [skills, setSkills] = useState([]);
