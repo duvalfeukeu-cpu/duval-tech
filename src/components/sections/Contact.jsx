@@ -12,7 +12,7 @@ import {
   FaWhatsapp,
 } from "react-icons/fa";
 
-const API = "http://localhost:5000/api/messages";
+const API = "https://duval-tech-api.onrender.com/api/messages";
 
 const Contact = () => {
   // ==========================
