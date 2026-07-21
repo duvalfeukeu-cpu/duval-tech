@@ -160,12 +160,13 @@ const ProjectModal = ({
       const method = project
         ? "PUT"
         : "POST";
-
+    const token = localStorage.getItem("token");
       const response = await fetch(url, {
         method,
-        headers: {
-          "Content-Type": "application/json",
-        },
+      headers: {
+        "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+      },
         body: JSON.stringify(form),
       });
 

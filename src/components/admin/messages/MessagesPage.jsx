@@ -17,25 +17,31 @@ const MessagesPage = () => {
   // LOAD MESSAGES
   // ==========================
 
-  const loadMessages = async () => {
-    try {
+const loadMessages = async () => {
+  try {
 
-      const response = await fetch(API);
+    const token = localStorage.getItem("token");
 
-      if (!response.ok) {
-        throw new Error("Erreur lors du chargement.");
-      }
+    const response = await fetch(API, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-      const data = await response.json();
-
-      setMessages(data);
-
-    } catch (error) {
-
-      console.error(error);
-
+    if (!response.ok) {
+      throw new Error("Erreur lors du chargement.");
     }
-  };
+
+    const data = await response.json();
+
+    setMessages(data);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+};
 
   useEffect(() => {
     loadMessages();
@@ -70,9 +76,14 @@ const MessagesPage = () => {
 
     try {
 
-      await fetch(`${API}/${id}`, {
-        method: "DELETE",
-      });
+      const token = localStorage.getItem("token");
+
+        await fetch(`${API}/${id}`, {
+         method: "DELETE",
+         headers: {
+          Authorization: `Bearer ${token}`,
+        },
+    });
 
       loadMessages();
 
@@ -92,16 +103,18 @@ const MessagesPage = () => {
 
     try {
 
-      await fetch(`${API}/${message.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          is_read: !message.is_read,
-        }),
-      });
+const token = localStorage.getItem("token");
 
+await fetch(`${API}/${message.id}`, {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  },
+  body: JSON.stringify({
+    is_read: !message.is_read,
+  }),
+});
       loadMessages();
 
     } catch (error) {

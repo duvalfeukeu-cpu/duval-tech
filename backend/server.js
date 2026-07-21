@@ -8,19 +8,22 @@ const supabase = require("./config/supabase");
 const uploadRoutes = require("./routes/uploadRoutes");
 const skillsRoutes = require("./routes/skillsRoutes");
 const messageRoutes = require("./routes/messagesRoutes");
+const authRoutes = require("./routes/authRoutes");
+const authMiddleware = require("./middlewares/authMiddleware");
 
 console.log("URL =", process.env.SUPABASE_URL);
 console.log(
   "KEY PREFIX =",
   process.env.SUPABASE_KEY?.substring(0, 30)
 );
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
 /* ==========================
-   LOG DES REQUETES
+   LOG DES REQUÊTES
 ========================== */
 
 app.use((req, res, next) => {
@@ -42,18 +45,6 @@ app.get("/", (req, res) => {
 
 app.get("/test", (req, res) => {
   res.send("test ok");
-});
-
-/* ==========================
-   TEST POST
-========================== */
-
-app.post("/test-post", (req, res) => {
-  console.log("POST TEST RECU");
-  res.json({
-    success: true,
-    message: "POST OK"
-  });
 });
 
 /* ==========================
@@ -79,7 +70,7 @@ app.get("/api/projects", async (req, res) => {
    AJOUTER PROJET
 ========================== */
 
-app.post("/api/projects", async (req, res) => {
+app.post("/api/projects", authMiddleware, async (req, res) => {
   try {
     console.log("POST /api/projects RECU");
     console.log(req.body);
@@ -112,10 +103,12 @@ app.post("/api/projects", async (req, res) => {
       return res.status(500).json(error);
     }
 
+    console.log("PROJET AJOUTÉ :", data);
+
     res.status(201).json(data);
 
   } catch (err) {
-    console.error(err);
+    console.error("ERREUR :", err);
 
     res.status(500).json({
       message: err.message
@@ -124,10 +117,19 @@ app.post("/api/projects", async (req, res) => {
 });
 
 /* ==========================
+   AUTRES ROUTES
+========================== */
+
+app.use("/api/upload", uploadRoutes);
+app.use("/api/skills", skillsRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/auth", authRoutes);
+
+/* ==========================
    MODIFIER PROJET
 ========================== */
 
-app.put("/api/projects/:id", async (req, res) => {
+app.put("/api/projects/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -172,7 +174,7 @@ app.put("/api/projects/:id", async (req, res) => {
    SUPPRIMER PROJET
 ========================== */
 
-app.delete("/api/projects/:id", async (req, res) => {
+app.delete("/api/projects/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -201,7 +203,14 @@ app.delete("/api/projects/:id", async (req, res) => {
    UPLOAD IMAGE
 ========================== */
 
+
 app.use("/api/upload", uploadRoutes);
+
+/* ==========================
+   AUTH
+========================== */
+
+app.use("/api/auth", authRoutes);
 /* ==========================
    MESSAGES
 ========================== */

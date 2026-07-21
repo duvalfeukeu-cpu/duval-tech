@@ -110,22 +110,24 @@ const SkillModal = ({
       // ==========================
       // POST OU PUT
       // ==========================
-
       const url = skill
-        ? `${API}/${skill.id}`
-        : API;
+  ? `${API}/${skill.id}`
+  : API;
 
-      const method = skill
-        ? "PUT"
-        : "POST";
+const method = skill
+  ? "PUT"
+  : "POST";
 
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
-      });
+const token = localStorage.getItem("token");
+
+const response = await fetch(url, {
+  method,
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  },
+  body: JSON.stringify(form),
+});
 
       const data = await response.json();
 

@@ -4,7 +4,7 @@ import ProjectsGrid from "./ProjectsGrid";
 import ProjectModal from "./ProjectModal";
 import DeleteModal from "./DeleteModal";
 
-const API = "https://duval-tech-api.onrender.com/api/projects";
+const API = "http://localhost:5000/api/projects"
 
 const ProjectsPage = () => {
   // ===========================

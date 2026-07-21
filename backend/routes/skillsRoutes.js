@@ -2,6 +2,8 @@ const express = require("express");
 
 const router = express.Router();
 
+const authMiddleware = require("../middlewares/authMiddleware");
+
 const {
   getSkills,
   createSkill,
@@ -19,18 +21,18 @@ router.get("/", getSkills);
 // CREATE SKILL
 // ==========================
 
-router.post("/", createSkill);
+router.post("/", authMiddleware, createSkill);
 
 // ==========================
 // UPDATE SKILL
 // ==========================
 
-router.put("/:id", updateSkill);
+router.put("/:id", authMiddleware, updateSkill);
 
 // ==========================
 // DELETE SKILL
 // ==========================
 
-router.delete("/:id", deleteSkill);
+router.delete("/:id", authMiddleware, deleteSkill);
 
 module.exports = router;
