@@ -1,39 +1,43 @@
 import StatCard from "./StatCard";
 
-const StatsGrid = () => {
-  return (
-    <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+const StatsGrid = ({ stats, loading }) => {
 
-      <StatCard
-        title="Total Projets"
-        value="12"
-        icon="📁"
-        color="bg-blue-100"
-      />
+    return (
 
-      <StatCard
-        title="Compétences"
-        value="18"
-        icon="💻"
-        color="bg-green-100"
-      />
+        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
 
-      <StatCard
-        title="Messages"
-        value="5"
-        icon="📩"
-        color="bg-orange-100"
-      />
+            <StatCard
+                title="Total Projets"
+                value={loading ? "..." : stats.projects}
+                icon="📁"
+                color="bg-blue-100"
+            />
 
-      <StatCard
-        title="Visiteurs"
-        value="---"
-        icon="👀"
-        color="bg-purple-100"
-      />
+            <StatCard
+                title="Compétences"
+                value={loading ? "..." : stats.skills}
+                icon="💻"
+                color="bg-green-100"
+            />
 
-    </div>
-  );
+            <StatCard
+                title="Messages"
+                value={loading ? "..." : stats.messages}
+                icon="📩"
+                color="bg-orange-100"
+            />
+
+            <StatCard
+                title="Visiteurs"
+                value={loading ? "..." : stats.visitors}
+                icon="👀"
+                color="bg-purple-100"
+            />
+
+        </div>
+
+    );
+
 };
 
 export default StatsGrid;

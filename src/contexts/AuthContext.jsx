@@ -1,171 +1,201 @@
 import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
+    createContext,
+    useContext,
+    useEffect,
+    useState,
 } from "react";
 
-// ==========================
-// CREATION DU CONTEXT
-// ==========================
+// ===================================
+// API URL
+// ===================================
+
+const API =
+    import.meta.env.VITE_API_URL ||
+    "http://localhost:5000";
+
+// ===================================
+// CONTEXT
+// ===================================
 
 const AuthContext = createContext();
 
-// ==========================
+// ===================================
 // PROVIDER
-// ==========================
+// ===================================
 
 const AuthProvider = ({ children }) => {
 
-  // ==========================
-  // STATES
-  // ==========================
+    const [user, setUser] = useState(null);
 
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true);
+    const [token, setToken] = useState(null);
 
-  // ==========================
-  // VERIFICATION AU DEMARRAGE
-  // ==========================
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+    // ===================================
+    // CHECK LOGIN AU DEMARRAGE
+    // ===================================
 
-    try {
+    useEffect(() => {
 
-      const savedToken = localStorage.getItem("token");
-      const savedUser = localStorage.getItem("user");
+        try {
 
-      if (savedToken && savedUser) {
-        setToken(savedToken);
-        setUser(JSON.parse(savedUser));
-      }
+            const savedToken =
+                localStorage.getItem("token");
 
-    } catch (error) {
+            const savedUser =
+                localStorage.getItem("user");
 
-      console.error("Erreur Local Storage :", error);
+            if (savedToken && savedUser) {
 
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+                setToken(savedToken);
 
-    } finally {
+                setUser(JSON.parse(savedUser));
 
-      setLoading(false);
+            }
 
-    }
+        } catch (error) {
 
-  }, []);
+            console.error(error);
 
-  // ==========================
-  // LOGIN
-  // ==========================
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
 
-  const login = async (email, password) => {
+        } finally {
 
-    try {
+            setLoading(false);
 
-      const response = await fetch(
-        "http://localhost:5000/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
         }
-      );
 
-      const data = await response.json();
+    }, []);
 
-      if (!response.ok) {
-        throw new Error(
-          data.message || "Email ou mot de passe incorrect."
-        );
-      }
+    // ===================================
+    // LOGIN
+    // ===================================
 
-      // ==========================
-      // SAUVEGARDE
-      // ==========================
+    const login = async (email, password) => {
 
-      localStorage.setItem("token", data.token);
+        try {
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify(data.admin)
-      );
+            const response = await fetch(
+                `${API}/api/auth/login`,
+                {
+                    method: "POST",
 
-      setToken(data.token);
-      setUser(data.admin);
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+                    },
 
-      return {
-        success: true,
-      };
+                    body: JSON.stringify({
+                        email,
+                        password,
+                    }),
+                }
+            );
 
-    } catch (error) {
+            const data =
+                await response.json();
 
-      console.error("Erreur de connexion :", error);
+            if (!response.ok) {
 
-      return {
-        success: false,
-        message: error.message,
-      };
+                throw new Error(
+                    data.message ||
+                    "Email ou mot de passe incorrect."
+                );
 
-    }
+            }
 
-  };
+            localStorage.setItem(
+                "token",
+                data.token
+            );
 
-  // ==========================
-  // LOGOUT
-  // ==========================
+            localStorage.setItem(
+                "user",
+                JSON.stringify(data.admin)
+            );
 
-  const logout = () => {
+            setToken(data.token);
 
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+            setUser(data.admin);
 
-    setToken(null);
-    setUser(null);
+            return {
+                success: true,
+            };
 
-  };
+        } catch (error) {
 
-  // ==========================
-  // VALEURS DU CONTEXT
-  // ==========================
+            console.error(
+                "Erreur de connexion :",
+                error
+            );
 
-  const value = {
-    user,
-    token,
-    loading,
-    login,
-    logout,
-    isAuthenticated: Boolean(token),
-  };
+            return {
 
-  // ==========================
-  // PROVIDER
-  // ==========================
+                success: false,
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+                message: error.message,
+
+            };
+
+        }
+
+    };
+
+    // ===================================
+    // LOGOUT
+    // ===================================
+
+    const logout = () => {
+
+        localStorage.removeItem("token");
+
+        localStorage.removeItem("user");
+
+        setUser(null);
+
+        setToken(null);
+
+    };
+
+    // ===================================
+    // PROVIDER
+    // ===================================
+
+    return (
+
+        <AuthContext.Provider
+            value={{
+                user,
+                token,
+                loading,
+                login,
+                logout,
+                isAuthenticated:
+                    Boolean(token),
+            }}
+        >
+
+            {children}
+
+        </AuthContext.Provider>
+
+    );
 
 };
 
-// ==========================
-// HOOK PERSONNALISE
-// ==========================
+// ===================================
+// HOOK
+// ===================================
 
 export const useAuth = () => {
-  return useContext(AuthContext);
+
+    return useContext(AuthContext);
+
 };
 
-// ==========================
+// ===================================
 // EXPORT
-// ==========================
+// ===================================
 
 export default AuthProvider;

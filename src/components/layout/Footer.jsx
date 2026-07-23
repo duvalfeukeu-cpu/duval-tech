@@ -26,29 +26,6 @@ return (
                 transition={{ duration:.7 }}
 
             >
-
-                <span
-                    className="
-                        inline-flex
-                        items-center
-                        px-4
-                        py-2
-                        rounded-full
-                        border
-                        border-blue-500/20
-                        bg-blue-500/10
-                        text-blue-400
-                        text-xs
-                        uppercase
-                        tracking-[0.25em]
-                        font-semibold
-                    "
-                >
-
-                    Duval Tech
-
-                </span>
-
                 <h2
                     className="
                         mt-8
@@ -62,7 +39,7 @@ return (
 
                     <span className="text-blue-500">
 
-                        Tech
+                        FEUKEU
 
                     </span>
 
@@ -428,67 +405,6 @@ return (
 </div>
 
 </motion.div>
-
-</div>
-
-{/* Footer Bottom */}
-
-<div
-    className="
-        mt-20
-        pt-8
-        border-t
-        border-white/10
-        flex
-        flex-col
-        md:flex-row
-        justify-between
-        items-center
-        gap-6
-    "
->
-
-    <div>
-
-        <p className="text-slate-500">
-
-            © {new Date().getFullYear()} <span className="text-white">Duval Tech</span>.
-            Tous droits réservés.
-
-        </p>
-
-        <p className="mt-2 text-sm text-slate-600">
-
-            Made with ❤️ using React & Tailwind CSS
-
-        </p>
-
-    </div>
-
-    <a
-        href="#home"
-        className="
-            inline-flex
-            items-center
-            gap-3
-            px-6
-            py-3
-            rounded-full
-            border
-            border-white/10
-            bg-white/5
-            text-slate-300
-            transition-all
-            duration-300
-            hover:bg-blue-500/10
-            hover:border-blue-500/30
-            hover:text-blue-400
-        "
-    >
-
-        ↑ Retour en haut
-
-    </a>
 
 </div>
 

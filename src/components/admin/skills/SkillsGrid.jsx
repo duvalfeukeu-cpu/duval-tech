@@ -3,6 +3,7 @@ import SkillCard from "./SkillCard";
 const SkillsGrid = ({
   skills,
   onEdit,
+  onDelete,
 }) => {
 
   // ==========================
@@ -58,11 +59,12 @@ const SkillsGrid = ({
 
       {skills.map((skill) => (
 
-        <SkillCard
-          key={skill.id}
-          skill={skill}
-          onEdit={onEdit}
-        />
+<SkillCard
+    key={skill.id}
+    skill={skill}
+    onEdit={onEdit}
+    onDelete={onDelete}
+/>
 
       ))}
 

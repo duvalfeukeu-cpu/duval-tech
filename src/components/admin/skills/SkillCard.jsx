@@ -1,6 +1,3 @@
-import toast from "react-hot-toast";
-
-const API = "http://localhost:5000/api/skills";
 
 const SkillCard = ({
   skill,
@@ -12,42 +9,6 @@ const SkillCard = ({
   // DELETE
   // ==========================
 
-  const handleDelete = async () => {
-
-    const confirmDelete = window.confirm(
-      `Supprimer "${skill.name}" ?`
-    );
-
-    if (!confirmDelete) return;
-
-    try {
-
-      const response = await fetch(
-        `${API}/${skill.id}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error();
-      }
-
-      toast.success("Compétence supprimée.");
-
-      if (onDelete) {
-        onDelete();
-      }
-
-    } catch (error) {
-
-      console.error(error);
-
-      toast.error("Impossible de supprimer.");
-
-    }
-
-  };
 
   return (
 
@@ -157,39 +118,20 @@ const SkillCard = ({
 
       <div className="flex gap-3 mt-8">
 
-        <button
-          onClick={() => onEdit(skill)}
-          className="
-            flex-1
-            bg-yellow-500
-            hover:bg-yellow-600
-            text-white
-            py-3
-            rounded-xl
-            transition
-          "
-        >
-
-          ✏ Modifier
-
-        </button>
-
-        <button
-          onClick={handleDelete}
-          className="
-            flex-1
-            bg-red-600
-            hover:bg-red-700
-            text-white
-            py-3
-            rounded-xl
-            transition
-          "
-        >
-
-          🗑 Supprimer
-
-        </button>
+<button
+  onClick={() => onDelete(skill)}
+  className="
+    flex-1
+    bg-red-600
+    hover:bg-red-700
+    text-white
+    py-3
+    rounded-xl
+    transition
+  "
+>
+  🗑 Supprimer
+</button>
 
       </div>
 

@@ -1,12 +1,15 @@
 const DeleteModal = ({
   open,
-  project,
+  item,
+  type = "élément",
   onClose,
   onConfirm,
   loading,
 }) => {
 
   if (!open) return null;
+
+  const itemName = item?.title || item?.name || "";
 
   return (
     <div
@@ -21,7 +24,6 @@ const DeleteModal = ({
         z-50
       "
     >
-
       <div
         className="
           bg-white
@@ -32,7 +34,6 @@ const DeleteModal = ({
           p-8
         "
       >
-
         <div className="text-center">
 
           <div className="text-6xl mb-4">
@@ -40,20 +41,18 @@ const DeleteModal = ({
           </div>
 
           <h2 className="text-3xl font-bold">
-            Supprimer le projet ?
+            Supprimer cette {type} ?
           </h2>
 
           <p className="text-slate-500 mt-4">
-
             Êtes-vous sûr de vouloir supprimer
 
             <span className="font-bold">
               {" "}
-              {project?.title}
+              {itemName}
             </span>
 
             ?
-
           </p>
 
           <p className="text-red-500 mt-3">
@@ -83,6 +82,7 @@ const DeleteModal = ({
               flex-1
               bg-red-600
               hover:bg-red-700
+              disabled:bg-red-400
               text-white
               rounded-xl
               py-3
@@ -96,7 +96,6 @@ const DeleteModal = ({
         </div>
 
       </div>
-
     </div>
   );
 

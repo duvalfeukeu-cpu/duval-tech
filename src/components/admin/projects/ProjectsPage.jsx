@@ -79,38 +79,59 @@ const ProjectsPage = () => {
     setDeleteModalOpen(true);
   };
 
-  const confirmDelete = async () => {
+ const confirmDelete = async () => {
 
     try {
 
-      setLoadingDelete(true);
+        setLoadingDelete(true);
 
-      await fetch(
-        `${API}/${selectedProject.id}`,
-        {
-          method: "DELETE",
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(
+            `${API}/${selectedProject.id}`,
+            {
+                method: "DELETE",
+
+                headers: {
+
+                    Authorization: `Bearer ${token}`,
+
+                },
+
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.message || "Erreur de suppression."
+            );
+
         }
-      );
 
-      await loadProjects();
+        await loadProjects();
 
-       toast.success("Projet supprimé avec succès !");
+        toast.success("Projet supprimé avec succès !");
 
-      setDeleteModalOpen(false);
-      setSelectedProject(null);
+        setDeleteModalOpen(false);
+
+        setSelectedProject(null);
 
     } catch (err) {
 
-      console.log(err);
-      toast.error("Impossible de supprimer le projet.");
+        console.error(err);
+
+        toast.error(err.message);
 
     } finally {
 
-      setLoadingDelete(false);
+        setLoadingDelete(false);
 
     }
 
-  };
+};
 
   // ===========================
   // CLOSE MODAL
@@ -189,13 +210,17 @@ const ProjectsPage = () => {
 
       {/* MODAL AJOUT / MODIFICATION */}
 
-      <ProjectModal
-        open={openModal}
-        project={selectedProject}
-        onClose={handleCloseModal}
-        onSuccess={loadProjects}
-      />
-
+      <DeleteModal
+  open={deleteModalOpen}
+  item={selectedProject}
+  type="projet"
+  loading={loadingDelete}
+  onClose={() => {
+    setDeleteModalOpen(false);
+    setSelectedProject(null);
+  }}
+  onConfirm={confirmDelete}
+/>
       {/* MODAL DELETE */}
 
       <DeleteModal

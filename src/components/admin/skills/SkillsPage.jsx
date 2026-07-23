@@ -1,37 +1,55 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 import SkillsGrid from "./SkillsGrid";
 import SkillModal from "./SkillModal";
+import DeleteModal from "../projects/DeleteModal"; // <-- adapte le chemin si besoin
 
 const API = "http://localhost:5000/api/skills";
 
 const SkillsPage = () => {
+
   // ==========================
   // STATES
   // ==========================
 
   const [skills, setSkills] = useState([]);
   const [search, setSearch] = useState("");
+
   const [openModal, setOpenModal] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState(null);
+
+  // DELETE
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
 
   // ==========================
   // LOAD SKILLS
   // ==========================
 
   const loadSkills = async () => {
+
     try {
+
       const response = await fetch(API);
+
       const data = await response.json();
 
       setSkills(data);
+
     } catch (error) {
+
       console.error(error);
+
     }
+
   };
 
   useEffect(() => {
+
     loadSkills();
+
   }, []);
 
   // ==========================
@@ -45,21 +63,90 @@ const SkillsPage = () => {
   );
 
   // ==========================
-  // OPEN ADD MODAL
+  // ADD
   // ==========================
 
   const handleAddSkill = () => {
+
     setSelectedSkill(null);
+
     setOpenModal(true);
+
   };
 
   // ==========================
-  // OPEN EDIT MODAL
+  // EDIT
   // ==========================
 
   const handleEditSkill = (skill) => {
+
     setSelectedSkill(skill);
+
     setOpenModal(true);
+
+  };
+
+  // ==========================
+  // DELETE
+  // ==========================
+
+  const handleDeleteSkill = (skill) => {
+
+    setSelectedSkill(skill);
+
+    setDeleteModalOpen(true);
+
+  };
+
+  const confirmDelete = async () => {
+
+    try {
+
+      setLoadingDelete(true);
+
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `${API}/${selectedSkill.id}`,
+        {
+          method: "DELETE",
+
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message || "Impossible de supprimer."
+        );
+
+      }
+
+      toast.success("Compétence supprimée avec succès !");
+
+      await loadSkills();
+
+      setDeleteModalOpen(false);
+
+      setSelectedSkill(null);
+
+    } catch (error) {
+
+      console.error(error);
+
+      toast.error(error.message);
+
+    } finally {
+
+      setLoadingDelete(false);
+
+    }
+
   };
 
   // ==========================
@@ -67,8 +154,11 @@ const SkillsPage = () => {
   // ==========================
 
   const handleCloseModal = () => {
+
     setOpenModal(false);
+
     setSelectedSkill(null);
+
   };
 
   // ==========================
@@ -76,6 +166,7 @@ const SkillsPage = () => {
   // ==========================
 
   return (
+
     <div className="space-y-8">
 
       {/* HEADER */}
@@ -83,6 +174,7 @@ const SkillsPage = () => {
       <div className="flex items-center justify-between">
 
         <div>
+
           <h1 className="text-4xl font-bold text-slate-900">
             Gestion des compétences
           </h1>
@@ -90,6 +182,7 @@ const SkillsPage = () => {
           <p className="text-slate-500 mt-2">
             Gérez les compétences de votre portfolio.
           </p>
+
         </div>
 
         <button
@@ -134,10 +227,10 @@ const SkillsPage = () => {
       <SkillsGrid
         skills={filteredSkills}
         onEdit={handleEditSkill}
-        onDelete={loadSkills}
+        onDelete={handleDeleteSkill}
       />
 
-      {/* MODAL */}
+      {/* MODAL AJOUT / MODIFICATION */}
 
       <SkillModal
         open={openModal}
@@ -146,8 +239,27 @@ const SkillsPage = () => {
         onSuccess={loadSkills}
       />
 
+      {/* MODAL SUPPRESSION */}
+
+      <DeleteModal
+        open={deleteModalOpen}
+        item={selectedSkill}
+        type="compétence"
+        loading={loadingDelete}
+        onClose={() => {
+
+          setDeleteModalOpen(false);
+
+          setSelectedSkill(null);
+
+        }}
+        onConfirm={confirmDelete}
+      />
+
     </div>
+
   );
+
 };
 
 export default SkillsPage;
