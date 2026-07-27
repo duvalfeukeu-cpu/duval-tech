@@ -73,7 +73,7 @@ const login = async (req, res) => {
     );
 
     // ==========================
-    // REPONSE
+    // REPONSE AccountCard.jsx
     // ==========================
 
     return res.status(200).json({
@@ -81,7 +81,9 @@ const login = async (req, res) => {
       message: "Connexion réussie.",
       token,
       admin: {
-        email: adminEmail,
+       email: adminEmail,
+       role: "Administrateur",
+       status: "Connecté",
       },
     });
 

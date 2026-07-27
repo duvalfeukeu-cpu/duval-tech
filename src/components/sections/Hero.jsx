@@ -1,7 +1,13 @@
 import { motion } from "framer-motion";
-import duvalPhoto from "../../assets/images/duval.png";
+import { useSettings } from "../../contexts/SettingsContext";
 
 const Hero = () => {
+
+const { settings, loading } = useSettings();
+
+if (loading) {
+    return null;
+}
     return (
 <section className="relative min-h-screen overflow-hidden bg-[#08131F] pt-28">
 
@@ -95,69 +101,68 @@ const Hero = () => {
         <span>Bonjour, je suis</span>
     </div>
 
-    {/* Titre */}
-
     <h1
-        className="
-            text-5xl
-            md:text-6xl
-            xl:text-7xl
-            font-black
-            leading-[1.05]
-            tracking-tight
-            text-white
-        "
-    >
-        Feukeu{" "}
-        <span className="bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent">
-            Duval
-        </span>
+    className="
+        text-5xl
+        md:text-6xl
+        xl:text-7xl
+        font-black
+        leading-[1.05]
+        tracking-tight
+        text-white
+    "
+>
+    {settings?.fullname ? (
+        <>
+            {settings.fullname.split(" ")[0]}{" "}
+            <span className="bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent">
+                {settings.fullname.split(" ").slice(1).join(" ")}
+            </span>
+        </>
+    ) : (
+        <>
+            Feukeu{" "}
+            <span className="bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent">
+                Duval
+            </span>
+        </>
+    )}
     </h1>
 
     {/* Sous-titre */}
 
-    <h2
-        className="
-            mt-8
-            text-2xl
-            lg:text-3xl
-            font-semibold
-            text-slate-200
-            leading-relaxed
-        "
-    >
-        Développeur Full-Stack
-        <br />
+   <h2
+    className="
+        mt-8
+        text-2xl
+        lg:text-3xl
+        font-semibold
+        text-slate-200
+        leading-relaxed
+    "
+>
+    {settings?.title || "Développeur Full-Stack"}
 
-        <span className="text-blue-400">
-            & Fondateur de Dev-Elites
-        </span>
-    </h2>
+    <br />
 
-    {/* Description */}
+    <span className="text-blue-400">
+        & Fondateur de Dev-Elites
+    </span>
+   </h2>
 
-    <p
-        className="
-            mt-8
-            text-lg
-            lg:text-xl
-            text-slate-400
-            leading-9
-            max-w-xl
-        "
-    >
-        Je développe des applications web modernes,
-        performantes et évolutives avec React, Node.js,
-        Express et Supabase.
-
-        <br />
-        <br />
-
-        À travers <span className="text-white font-medium">Duval Tech</span> et
-        <span className="text-blue-400 font-medium"> Dev-Elites</span>,
-        j'aide également les développeurs francophones à progresser grâce à des
-        contenus pratiques et des projets concrets.
-    </p>
+   <p
+    className="
+        mt-8
+        text-lg
+        lg:text-xl
+        text-slate-400
+        leading-9
+        max-w-xl
+    "
+>
+    {settings?.bio ||
+        "Je développe des applications web modernes, performantes et évolutives avec React, Node.js, Express et Supabase."}
+   </p>
 
     {/* Boutons */}
 
@@ -251,43 +256,47 @@ const Hero = () => {
         "
     />
 
-    {/* Carte Photo */}
+{/* Carte Photo */}
 
-    <motion.div
-        animate={{
-            y: [0, -10, 0],
-        }}
-        transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-        }}
-        className="
-            relative
-            z-20
-            overflow-hidden
-            rounded-[36px]
-            border
-            border-white/10
-            bg-white/5
-            backdrop-blur-2xl
-            shadow-[0_25px_80px_rgba(0,0,0,.45)]
-            p-4
-        "
-    >
+<motion.div
+    animate={{
+        y: [0, -10, 0],
+    }}
+    transition={{
+        duration: 6,
+        repeat: Infinity,
+        ease: "easeInOut",
+    }}
+    className="
+        relative
+        z-20
+        overflow-hidden
+        rounded-[36px]
+        border
+        border-white/10
+        bg-white/5
+        backdrop-blur-2xl
+        shadow-[0_25px_80px_rgba(0,0,0,.45)]
+        p-4
+    "
+>
 
-        <img
-            src={duvalPhoto}
-            alt="Feukeu Duval"
-            className="
-                lg:w-[410px]
-                xl:w-[440px]
-                rounded-[28px]
-                object-cover
-            "
-        />
+      <img
+      src={settings.avatar}
+    alt={settings.fullname}
+    className="
+        w-[340px]
+        h-[430px]
+        lg:w-[410px]
+        lg:h-[520px]
+        xl:w-[440px]
+        xl:h-[560px]
+        rounded-[28px]
+        object-cover
+    "
+/>
 
-    </motion.div>
+</motion.div>
 
     {/* Badge React */}
 

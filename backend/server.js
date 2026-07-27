@@ -2,9 +2,10 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-
+// const authMiddleware = require("../middlewares/authMiddleware");
 const supabase = require("./config/supabase");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const settingsRoutes = require("./routes/settingsRoutes");
 
 const uploadRoutes = require("./routes/uploadRoutes");
 const skillsRoutes = require("./routes/skillsRoutes");
@@ -32,6 +33,8 @@ app.use((req, res, next) => {
   next();
 });
 
+
+app.use("/api/settings", settingsRoutes);
 /* ==========================
    ROUTE PRINCIPALE
 ========================== */
@@ -39,6 +42,7 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   res.send("API Duval Tech opérationnelle");
 });
+
 
 
 app.use("/api/dashboard", dashboardRoutes);
