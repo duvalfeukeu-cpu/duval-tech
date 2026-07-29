@@ -7,7 +7,7 @@ import SettingsForm from "./SettingsForm";
 import AccountCard from "./AccountCard";
 import ProfileCard from "./ProfileCard";
 
-const API = "http://localhost:5000/api/settings";
+const API = `${import.meta.env.VITE_API_URL}/api/settings`;
 
 const SettingsPage = () => {
 

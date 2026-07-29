@@ -5,7 +5,7 @@ import SkillsGrid from "./SkillsGrid";
 import SkillModal from "./SkillModal";
 import DeleteModal from "../projects/DeleteModal"; // <-- adapte le chemin si besoin
 
-const API = "http://localhost:5000/api/skills";
+const API = `${import.meta.env.VITE_API_URL}/api/skills`;
 
 const SkillsPage = () => {
 

@@ -4,7 +4,7 @@ import ProjectsGrid from "./ProjectsGrid";
 import ProjectModal from "./ProjectModal";
 import DeleteModal from "./DeleteModal";
 
-const API = "http://localhost:5000/api/projects"
+const API = `${import.meta.env.VITE_API_URL}/api/projects`;
 
 const ProjectsPage = () => {
   // ===========================

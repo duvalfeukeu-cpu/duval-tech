@@ -7,7 +7,7 @@ import {
 
 const SettingsContext = createContext(null);
 
-const API = "http://localhost:5000/api/settings";
+const API = `${import.meta.env.VITE_API_URL}/api/settings`;
 
 export const SettingsProvider = ({ children }) => {
 
@@ -28,6 +28,7 @@ export const SettingsProvider = ({ children }) => {
             setLoading(true);
 
             setError(null);
+            console.log("VITE_API_URL =", import.meta.env.VITE_API_URL);
 
             const response = await fetch(API);
 

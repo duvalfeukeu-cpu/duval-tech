@@ -6,48 +6,16 @@ const supabase = require("../config/supabase");
 
 const getSettings = async (req, res) => {
 
-  try {
+  const { data, error } = await supabase
+    .from("settings")
+    .select("*");
 
-    const { data, error } = await supabase
-      .from("settings")
-      .select(`
-        id,
-        fullname,
-        title,
-        bio,
-        email,
-        phone,
-        location,
-        github,
-        linkedin,
-        facebook,
-        youtube,
-        avatar,
-        updated_at
-      `)
-      .limit(1)
-      .single();
-
-    if (error) {
-      return res.status(500).json({
-        message: error.message,
-      });
-    }
-
-    res.json(data);
-
-  } catch (err) {
-
-    console.error(err);
-
-    res.status(500).json({
-      message: err.message,
-    });
-
-  }
+  return res.json({
+    data,
+    error,
+  });
 
 };
-
 // ==========================
 // UPDATE SETTINGS
 // ==========================
@@ -60,13 +28,6 @@ const updateSettings = async (req, res) => {
       fullname,
       title,
       bio,
-      email,
-      phone,
-      location,
-      github,
-      linkedin,
-      facebook,
-      youtube,
       avatar,
     } = req.body;
 
@@ -92,13 +53,6 @@ const updateSettings = async (req, res) => {
         fullname,
         title,
         bio,
-        email,
-        phone,
-        location,
-        github,
-        linkedin,
-        facebook,
-        youtube,
         avatar,
         updated_at: new Date().toISOString(),
       })

@@ -49,8 +49,7 @@ const ProfileCard = ({
 
       formData.append("image", file);
 
-      const uploadResponse = await fetch(
-        "http://localhost:5000/api/upload",
+      const uploadResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/upload`,
         {
           method: "POST",
           body: formData,
@@ -77,8 +76,8 @@ console.log("Image URL :", imageUrl);
 
       const token = localStorage.getItem("token");
 
-      const saveResponse = await fetch(
-        "http://localhost:5000/api/settings",
+      const saveResponse = await fetch
+      (`${import.meta.env.VITE_API_URL}/api/settings`,
         {
           method: "PUT",
 
@@ -136,8 +135,8 @@ console.log("Image URL :", imageUrl);
 
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        "http://localhost:5000/api/settings",
+      const response = await fetch
+      (`${import.meta.env.VITE_API_URL}/api/settings`,
         {
           method: "PUT",
 

@@ -12,7 +12,7 @@ import {
   FaWhatsapp,
 } from "react-icons/fa";
 
-const API = "http://localhost:5000/api/messages";
+const API = `${import.meta.env.VITE_API_URL}/api/messages`;
 
 const Contact = () => {
   // ==========================

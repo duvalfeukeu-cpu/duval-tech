@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-const PROJECT_API = "http://localhost:5000/api/projects";
-const UPLOAD_API = "http://localhost:5000/api/upload";
+const PROJECT_API = `${import.meta.env.VITE_API_URL}/api/projects`;
+const UPLOAD_API = `${import.meta.env.VITE_API_URL}/api/upload`;
 
 const initialForm = {
   title: "",
