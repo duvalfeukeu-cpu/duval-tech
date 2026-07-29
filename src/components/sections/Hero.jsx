@@ -281,19 +281,22 @@ if (loading) {
     "
 >
 
-      <img
-      src={settings.avatar}
-    alt={settings.fullname}
-    className="
-        w-[340px]
-        h-[430px]
-        lg:w-[410px]
-        lg:h-[520px]
-        xl:w-[440px]
-        xl:h-[560px]
-        rounded-[28px]
-        object-cover
-    "
+<img
+  src={
+    settings?.avatar ||
+    "https://via.placeholder.com/440x560?text=Duval+Tech"
+  }
+  alt={settings?.fullname || "Duval Tech"}
+  className="
+      w-[340px]
+      h-[430px]
+      lg:w-[410px]
+      lg:h-[520px]
+      xl:w-[440px]
+      xl:h-[560px]
+      rounded-[28px]
+      object-cover
+  "
 />
 
 </motion.div>

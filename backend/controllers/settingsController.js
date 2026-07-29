@@ -6,16 +6,34 @@ const supabase = require("../config/supabase");
 
 const getSettings = async (req, res) => {
 
-  const { data, error } = await supabase
-    .from("settings")
-    .select("*");
+  try {
 
-  return res.json({
-    data,
-    error,
-  });
+    const { data, error } = await supabase
+      .from("settings")
+      .select("*")
+      .limit(1)
+      .single();
+
+    if (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+
+    res.json(data);
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      message: err.message,
+    });
+
+  }
 
 };
+
 // ==========================
 // UPDATE SETTINGS
 // ==========================
@@ -28,10 +46,13 @@ const updateSettings = async (req, res) => {
       fullname,
       title,
       bio,
+      email,
+      phone,
+      location,
       avatar,
     } = req.body;
 
-    // récupérer la ligne unique
+    // Récupérer la ligne unique
 
     const { data: current, error: currentError } = await supabase
       .from("settings")
@@ -40,11 +61,9 @@ const updateSettings = async (req, res) => {
       .single();
 
     if (currentError) {
-
       return res.status(500).json({
         message: currentError.message,
       });
-
     }
 
     const { data, error } = await supabase
@@ -53,6 +72,9 @@ const updateSettings = async (req, res) => {
         fullname,
         title,
         bio,
+        email,
+        phone,
+        location,
         avatar,
         updated_at: new Date().toISOString(),
       })
@@ -61,11 +83,9 @@ const updateSettings = async (req, res) => {
       .single();
 
     if (error) {
-
       return res.status(500).json({
         message: error.message,
       });
-
     }
 
     res.json({
