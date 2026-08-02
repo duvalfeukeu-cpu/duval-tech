@@ -331,95 +331,124 @@ const About = () => {
 
                 </div>
 
-                {/* ================= STATS ================= */}
-                
+          {/* ================= STATS ================= */}
 
-                <motion.div
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                    className="mt-28"
+<motion.div
+    initial={{ opacity: 0, y: 40 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.8 }}
+    className="mt-16 lg:mt-28"
+>
+
+    <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-5 xl:grid-cols-4">
+
+        {[
+            {
+                end: 15,
+                suffix: "+",
+                title: "Projets",
+            },
+            {
+                end: 1000,
+                suffix: "+",
+                title: "YouTube",
+            },
+            {
+                end: 200,
+                suffix: "+",
+                title: "Facebook",
+            },
+            {
+                end: 1,
+                suffix: "",
+                title: "Dev-Elites",
+            },
+        ].map((item, index) => (
+
+            <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{
+                    y: -5,
+                    scale: 1.02,
+                }}
+                viewport={{ once: true }}
+                transition={{
+                    delay: index * 0.15,
+                    duration: 0.5,
+                }}
+                className="
+                    relative
+                    overflow-hidden
+                    rounded-xl
+                    lg:rounded-2xl
+                    border
+                    border-white/10
+                    bg-white/5
+                    backdrop-blur-xl
+                    p-3
+                    sm:p-4
+                    lg:p-6
+                    min-h-[120px]
+                    sm:min-h-[140px]
+                    lg:min-h-[180px]
+                    flex
+                    flex-col
+                    justify-center
+                "
+            >
+
+                {/* Glow */}
+
+                <div className="absolute -top-8 -right-8 w-20 h-20 lg:w-24 lg:h-24 bg-blue-500/10 blur-3xl rounded-full" />
+
+                {/* Titre */}
+
+                <span className="text-[10px] sm:text-xs uppercase tracking-[0.18em] text-blue-400">
+
+                    {item.title}
+
+                </span>
+
+                {/* Chiffre */}
+
+                <h3
+                    className="
+                        mt-2
+                        text-2xl
+                        sm:text-3xl
+                        lg:text-4xl
+                        font-bold
+                        text-white
+                    "
                 >
 
-                    {/* Stats */}
-                      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-5">
+                    <AnimatedCounter
+                        end={item.end}
+                        suffix={item.suffix}
+                    />
 
-    {[
-        {
-            end: 15,
-            suffix: "+",
-            title: "Projets",
-        },
-        {
-            end: 1000,
-            suffix: "+",
-            title: "YouTube",
-        },
-        {
-            end: 200,
-            suffix: "+",
-            title: "Facebook",
-        },
-        {
-            end: 1,
-            suffix: "",
-            title: "Dev-Elites",
-        },
-    ].map((item, index) => (
+                </h3>
 
-        <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            whileHover={{
-                y: -5,
-                scale: 1.02,
-            }}
-            viewport={{ once: true }}
-            transition={{
-                delay: index * 0.15,
-                duration: 0.5,
-            }}
-            className="
-                relative
-                overflow-hidden
-                rounded-2xl
-                border
-                border-white/10
-                bg-white/5
-                backdrop-blur-xl
-                p-5 lg:p-6
-            "
-        >
+                {/* Description */}
 
-            <div className="absolute -top-8 -right-8 w-24 h-24 bg-blue-500/10 blur-3xl rounded-full" />
+                <p className="mt-1 text-xs sm:text-sm text-slate-400">
 
-            <span className="text-xs uppercase tracking-[0.25em] text-blue-400">
-                {item.title}
-            </span>
+                    {item.title}
 
-            <h3 className="mt-3 
-            text-3xl 
-            lg:text-4xl 
-            font-bold text-white">
+                </p>
 
-               <AnimatedCounter
-                end={item.end}
-                suffix={item.suffix}
-/>
-            </h3>
+            </motion.div>
 
-            <p className="mt-2 text-sm text-slate-400">
-                {item.title}
-            </p>
+        ))}
 
-        </motion.div>
+    </div>
 
-    ))}
+</motion.div>
 
-</div>
-                </motion.div>
+                
 
             </div>
 

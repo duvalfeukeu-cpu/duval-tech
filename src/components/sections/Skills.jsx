@@ -227,150 +227,157 @@ const Skills = () => {
 
                 )}
 
-                {/* Cartes */}
+               {/* =======================
+      CARTES DES SKILLS
+======================= */}
 
-                {!loading && skills.length > 0 && (
+{!loading && skills.length > 0 && (
 
-                    <div className="grid lg:grid-cols-2 gap-8 mt-20">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-20 items-start">
 
-                        {Object.entries(groupedSkills).map(([category, items], index) => (
+        {Object.entries(groupedSkills).map(([category, items], index) => (
 
-                            <motion.div
+            <motion.div
+                key={category}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                    duration: 0.6,
+                    delay: index * 0.15,
+                }}
+                whileHover={{
+                    y: -8,
+                }}
+                className="
+                    h-full
+                    rounded-3xl
+                    border
+                    border-white/10
+                    bg-white/5
+                    backdrop-blur-xl
+                    p-6
+                    transition-all
+                    duration-500
+                    hover:border-blue-500/30
+                    hover:shadow-[0_20px_60px_rgba(37,99,235,.15)]
+                "
+            >
 
-                                key={category}
+                {/* Header */}
 
-                                initial={{ opacity: 0, y: 40 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
+                <div className="flex items-center gap-4 mb-6">
 
-                                transition={{
-                                    duration: .6,
-                                    delay: index * .15,
-                                }}
+                    <div
+                        className="
+                            w-12
+                            h-12
+                            rounded-2xl
+                            flex
+                            items-center
+                            justify-center
+                            border
+                        "
+                        style={{
+                            color: getCategoryColor(category),
+                            borderColor: `${getCategoryColor(category)}40`,
+                            background: `${getCategoryColor(category)}15`,
+                        }}
+                    >
 
-                                whileHover={{
-                                    y: -8,
-                                }}
-
-                                className="
-                                    rounded-3xl
-                                    border
-                                    border-white/10
-                                    bg-white/5
-                                    backdrop-blur-xl
-                                    p-8
-                                    transition-all
-                                    duration-500
-                                    hover:border-blue-500/30
-                                    hover:shadow-[0_25px_80px_rgba(37,99,235,.15)]
-                                "
-
-                            >
-
-                                <div className="flex items-center gap-4 mb-10">
-
-                                    <div
-
-                                        className="
-                                            w-12
-                                            h-12
-                                            rounded-2xl
-                                            flex
-                                            items-center
-                                            justify-center
-                                            border
-                                        "
-
-                                        style={{
-                                            color: getCategoryColor(category),
-                                            borderColor: `${getCategoryColor(category)}40`,
-                                            background: `${getCategoryColor(category)}15`
-                                        }}
-
-                                    >
-
-                                        {getCategoryIcon(category)}
-
-                                    </div>
-
-                                    <h3 className="text-3xl font-bold text-white">
-
-                                        {category}
-
-                                    </h3>
-
-                                </div>
-
-                                {/* ===== La Partie 2 commence ici ===== */}
-                                                                {items.map((skill, skillIndex) => (
-
-                                    <div
-                                        key={skill.id}
-                                        className={
-                                            skillIndex !== items.length - 1
-                                                ? "mb-8"
-                                                : ""
-                                        }
-                                    >
-
-                                        <div className="flex justify-between items-center mb-3">
-
-                                            <div>
-
-                                                <h4 className="text-white font-semibold text-lg">
-                                                    {skill.name}
-                                                </h4>
-
-                                                <p className="text-slate-400 text-sm">
-                                                    Niveau de maîtrise
-                                                </p>
-
-                                            </div>
-
-                                            <span
-                                                className="font-bold text-lg"
-                                                style={{
-                                                    color: skill.color || getCategoryColor(category),
-                                                }}
-                                            >
-                                                {skill.level}%
-                                            </span>
-
-                                        </div>
-
-                                        <div className="relative w-full h-3 rounded-full bg-slate-700 overflow-hidden">
-
-                                            <motion.div
-                                                initial={{ width: 0 }}
-                                                whileInView={{
-                                                    width: `${skill.level}%`,
-                                                }}
-                                                viewport={{ once: true }}
-                                                transition={{
-                                                    duration: 1.2,
-                                                    delay: skillIndex * 0.15,
-                                                }}
-                                                className="h-full rounded-full"
-                                                style={{
-                                                    backgroundColor:
-                                                        skill.color ||
-                                                        getCategoryColor(category),
-                                                }}
-                                            />
-
-                                        </div>
-
-                                    </div>
-
-                                ))}
-
-                            </motion.div>
-
-                        ))}
+                        {getCategoryIcon(category)}
 
                     </div>
 
-                )}
+                    <h3 className="text-2xl font-bold text-white">
+
+                        {category}
+
+                    </h3>
+
+                </div>
+
+                {/* Skills */}
+
+                {items.map((skill, skillIndex) => (
+
+                    <div
+                        key={skill.id}
+                        className={
+                            skillIndex !== items.length - 1
+                                ? "mb-6"
+                                : ""
+                        }
+                    >
+
+                        <div className="flex justify-between items-center mb-2">
+
+                            <div>
+
+                                <h4 className="text-white font-semibold text-base">
+
+                                    {skill.name}
+
+                                </h4>
+
+                                <p className="text-slate-400 text-xs">
+
+                                    Niveau de maîtrise
+
+                                </p>
+
+                            </div>
+
+                            <span
+                                className="font-bold text-base"
+                                style={{
+                                    color:
+                                        skill.color ||
+                                        getCategoryColor(category),
+                                }}
+                            >
+
+                                {skill.level}%
+
+                            </span>
+
+                        </div>
+
+                        {/* Barre */}
+
+                        <div className="relative w-full h-2.5 rounded-full bg-slate-700 overflow-hidden">
+
+                            <motion.div
+                                initial={{ width: 0 }}
+                                whileInView={{
+                                    width: `${skill.level}%`,
+                                }}
+                                viewport={{ once: true }}
+                                transition={{
+                                    duration: 1,
+                                    delay: skillIndex * 0.15,
+                                }}
+                                className="h-full rounded-full"
+                                style={{
+                                    backgroundColor:
+                                        skill.color ||
+                                        getCategoryColor(category),
+                                }}
+                            />
+
+                        </div>
+
+                    </div>
+
+                ))}
+
+            </motion.div>
+
+        ))}
+
+    </div>
+
+)}
 
             </div>
 
