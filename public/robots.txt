@@ -1,5 +1,4 @@
-
 User-agent: *
 Allow: /
 
-Sitemap: https://duval-tech1.netlify.app/sitemap.xml
+Sitemap: https://duvalfeukeu.netlify.app/sitemap.xml
