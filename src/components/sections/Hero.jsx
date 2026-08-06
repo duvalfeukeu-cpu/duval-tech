@@ -1,3 +1,4 @@
+import { optimizeCloudinary } from "../../utils/cloudinary";
 import { motion } from "framer-motion";
 import { useSettings } from "../../contexts/SettingsContext";
 
@@ -282,23 +283,27 @@ if (loading) {
 >
 
 <img
-  src={
-    settings?.avatar ||
-    "https://via.placeholder.com/440x560?text=Duval+Tech"
-  }
-  alt={settings?.fullname || "Duval Tech"}
-  className="
-      w-[340px]
-      h-[430px]
-      lg:w-[410px]
-      lg:h-[520px]
-      xl:w-[440px]
-      xl:h-[560px]
-      rounded-[28px]
-      object-cover
-  "
+    src={
+        settings?.avatar
+            ? optimizeCloudinary(settings.avatar, 900)
+            : "https://via.placeholder.com/440x560?text=Duval+Tech"
+    }
+    alt={settings?.fullname || "Duval Tech"}
+    loading="eager"
+    fetchPriority="high"
+    width="440"
+    height="560"
+    className="
+        w-[340px]
+        h-[430px]
+        lg:w-[410px]
+        lg:h-[520px]
+        xl:w-[440px]
+        xl:h-[560px]
+        rounded-[28px]
+        object-cover
+    "
 />
-
 </motion.div>
 
     {/* Badge React */}

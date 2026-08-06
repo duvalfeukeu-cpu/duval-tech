@@ -76,8 +76,8 @@ console.log("Image URL :", imageUrl);
 
       const token = localStorage.getItem("token");
 
-      const saveResponse = await fetch
-      (`${import.meta.env.VITE_API_URL}/api/settings`,
+      const saveResponse = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/settings`,
         {
           method: "PUT",
 
@@ -135,8 +135,8 @@ console.log("Image URL :", imageUrl);
 
       const token = localStorage.getItem("token");
 
-      const response = await fetch
-      (`${import.meta.env.VITE_API_URL}/api/settings`,
+      const response = await fetch( 
+        `${import.meta.env.VITE_API_URL}/api/settings`,
         {
           method: "PUT",
 

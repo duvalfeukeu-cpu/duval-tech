@@ -10,6 +10,7 @@ import Admin from "./pages/Admin";
 
 
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import Layout from "./pages/Layout";
 
 function App() {
   return (
@@ -22,7 +23,11 @@ function App() {
         ========================== */}
 
         <Route
-          path="/"
+          element={<Layout />}
+        >
+
+          <Route
+          index
           element={<Home />}
         />
 
@@ -31,7 +36,7 @@ function App() {
         ========================== */}
 
         <Route
-          path="/login"
+          path="login"
           element={<Login />}
         />
 
@@ -40,14 +45,14 @@ function App() {
         ========================== */}
 
         <Route
-          path="/admin"
+          path="admin"
           element={
             <ProtectedRoute>
               <Admin />
             </ProtectedRoute>
           }
         />
-
+       </Route>
       </Routes>
 
     </BrowserRouter>

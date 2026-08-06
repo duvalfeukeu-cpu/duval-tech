@@ -1,16 +1,21 @@
 import { motion } from "framer-motion";
-import duvalPhoto from "../../assets/images/duval.png";
 import AnimatedCounter from "../common/AnimatedCounter";
 
-console.log(duvalPhoto);
+import { useSettings } from "../../contexts/SettingsContext";
+import { optimizeCloudinary } from "../../utils/cloudinary";
 
 const About = () => {
+
+    const { settings } = useSettings();
+
     return (
+
         <section
             id="about"
             className="relative overflow-hidden bg-[#08131F] py-28"
         >
-            {/* Background */}
+
+            {/* ================= BACKGROUND ================= */}
 
             <div className="absolute -top-24 right-0 w-[500px] h-[500px] rounded-full bg-blue-600/10 blur-[180px]" />
 
@@ -59,9 +64,11 @@ const About = () => {
                     >
                         Passionné par la création
                         <br />
+
                         <span className="text-blue-500">
                             de produits numériques.
                         </span>
+
                     </h2>
 
                     <p
@@ -80,7 +87,6 @@ const About = () => {
                     </p>
 
                 </motion.div>
-
                 {/* ================= CONTENT ================= */}
 
                 <div
@@ -140,16 +146,23 @@ const About = () => {
                             "
                         >
 
-                            <img
-                                src={duvalPhoto}
-                                alt="Feukeu Duval"
-                                className="
-                                    w-full
-                                    max-w-[470px]
-                                    rounded-[28px]
-                                    object-cover
-                                "
-                            />
+<img
+    src={
+        settings?.avatar
+            ? optimizeCloudinary(settings.avatar, 700)
+            : "https://via.placeholder.com/470x620"
+    }
+    alt={settings?.fullname || "Feukeu Duval"}
+    loading="lazy"
+    width="470"
+    height="620"
+    className="
+        w-full
+        max-w-[470px]
+        rounded-[28px]
+        object-cover
+    "
+/>
 
                         </motion.div>
 

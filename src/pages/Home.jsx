@@ -10,14 +10,14 @@ import Contact from "../components/sections/Contact";
 const Home = () => {
     return (
         <>
-            <Navbar />
+           
             <Hero />
             <About />
             <Skills />
             <Projects />
             <Services />
             <Contact />
-            <Footer />
+            
         </>
     );
 };

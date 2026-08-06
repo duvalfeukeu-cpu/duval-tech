@@ -1,3 +1,4 @@
+import { optimizeCloudinary } from "../../utils/cloudinary";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import {
@@ -139,18 +140,21 @@ return (
 
                         <div className="relative overflow-hidden">
 
-                            <img
-                                src={project.image}
-                                alt={project.title}
-                                className="
-                                    w-full
-                                    h-60
-                                    object-cover
-                                    transition-transform
-                                    duration-700
-                                    group-hover:scale-105
-                                "
-                            />
+                           <img
+                            src={optimizeCloudinary(project.image, 800)}
+                            alt={project.title}
+                            loading="lazy"
+                            width="800"
+                            height="480"
+                            className="
+                            w-full
+                            h-60
+                            object-cover
+                            transition-transform
+                            duration-700
+                            group-hover:scale-105
+                            "
+                           />
 
                             {/* Overlay */}
 
