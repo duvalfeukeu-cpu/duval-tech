@@ -11,11 +11,21 @@ const API = `${import.meta.env.VITE_API_URL}/api/settings`;
 
 export const SettingsProvider = ({ children }) => {
 
-    const [settings, setSettings] = useState(null);
+    // ==========================
+    // Paramètres par défaut
+    // ==========================
+
+    const [settings, setSettings] = useState({
+        fullname: "Feukeu Duval",
+        title: "Développeur Full-Stack",
+        bio: "Je développe des applications web modernes, performantes et évolutives avec React, Node.js, Express et Supabase.",
+        avatar: "",
+    });
 
     const [loading, setLoading] = useState(true);
 
     const [error, setError] = useState(null);
+
 
     // ==========================
     // Charger les paramètres
@@ -28,23 +38,37 @@ export const SettingsProvider = ({ children }) => {
             setLoading(true);
 
             setError(null);
-            console.log("VITE_API_URL =", import.meta.env.VITE_API_URL);
+
+            console.log(
+                "VITE_API_URL =",
+                import.meta.env.VITE_API_URL
+            );
 
             const response = await fetch(API);
 
             if (!response.ok) {
 
-                throw new Error("Impossible de charger les paramètres.");
+                throw new Error(
+                    "Impossible de charger les paramètres."
+                );
 
             }
 
             const data = await response.json();
 
-            setSettings(data);
+            // On conserve les valeurs par défaut
+            // si certaines données ne sont pas présentes
+            setSettings((prev) => ({
+                ...prev,
+                ...data,
+            }));
 
         } catch (err) {
 
-            console.error(err);
+            console.error(
+                "Erreur lors du chargement des paramètres :",
+                err
+            );
 
             setError(err.message);
 
@@ -56,11 +80,17 @@ export const SettingsProvider = ({ children }) => {
 
     };
 
+
+    // ==========================
+    // Charger au démarrage
+    // ==========================
+
     useEffect(() => {
 
         loadSettings();
 
     }, []);
+
 
     // ==========================
     // Mise à jour locale
@@ -69,32 +99,27 @@ export const SettingsProvider = ({ children }) => {
     const updateSettings = (newValues) => {
 
         setSettings((prev) => ({
-
             ...prev,
-
             ...newValues,
-
         }));
 
     };
+
+
+    // ==========================
+    // Provider
+    // ==========================
 
     return (
 
         <SettingsContext.Provider
             value={{
-
                 settings,
-
                 setSettings,
-
                 updateSettings,
-
                 loading,
-
                 error,
-
                 refreshSettings: loadSettings,
-
             }}
         >
 
@@ -105,6 +130,11 @@ export const SettingsProvider = ({ children }) => {
     );
 
 };
+
+
+// ==========================
+// Hook useSettings
+// ==========================
 
 export const useSettings = () => {
 

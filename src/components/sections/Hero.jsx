@@ -4,11 +4,7 @@ import { useSettings } from "../../contexts/SettingsContext";
 
 const Hero = () => {
 
-const { settings, loading } = useSettings();
-
-if (loading) {
-    return null;
-}
+const { settings } = useSettings();
     return (
 <section className="relative min-h-screen overflow-hidden bg-[#08131F] pt-28">
 

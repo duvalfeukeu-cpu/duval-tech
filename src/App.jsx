@@ -8,7 +8,6 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 
-
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Layout from "./pages/Layout";
 
@@ -22,37 +21,39 @@ function App() {
             SITE PUBLIC
         ========================== */}
 
-        <Route
-          element={<Layout />}
-        >
+        <Route element={<Layout />}>
 
           <Route
-          index
-          element={<Home />}
-        />
+            index
+            element={<Home />}
+          />
+
+        </Route>
+
 
         {/* ==========================
             LOGIN
         ========================== */}
 
         <Route
-          path="login"
+          path="/login"
           element={<Login />}
         />
+
 
         {/* ==========================
             ADMIN PROTÉGÉ
         ========================== */}
 
         <Route
-          path="admin"
+          path="/admin"
           element={
             <ProtectedRoute>
               <Admin />
             </ProtectedRoute>
           }
         />
-       </Route>
+
       </Routes>
 
     </BrowserRouter>
