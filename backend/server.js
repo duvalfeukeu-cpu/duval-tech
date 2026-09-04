@@ -2,81 +2,114 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-// const authMiddleware = require("../middlewares/authMiddleware");
+
 const supabase = require("./config/supabase");
+
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const settingsRoutes = require("./routes/settingsRoutes");
-
 const uploadRoutes = require("./routes/uploadRoutes");
 const skillsRoutes = require("./routes/skillsRoutes");
 const messageRoutes = require("./routes/messagesRoutes");
 const authRoutes = require("./routes/authRoutes");
-const authMiddleware = require("./middlewares/authMiddleware");
 
-console.log("URL =", process.env.SUPABASE_URL);
-console.log(
-  "KEY PREFIX =",
-  process.env.SUPABASE_KEY?.substring(0, 30)
-);
+const authMiddleware = require("./middlewares/authMiddleware");
 
 const app = express();
 
-app.use(cors());
+
+// ========================================
+// CONFIGURATION
+// ========================================
+
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
-/* ==========================
-   LOG DES REQUÊTES
-========================== */
+
+// ========================================
+// LOG DES REQUÊTES
+// ========================================
 
 app.use((req, res, next) => {
-  console.log(req.method, req.url);
+  console.log(`${req.method} ${req.url}`);
   next();
 });
 
 
-app.use("/api/settings", settingsRoutes);
-/* ==========================
-   ROUTE PRINCIPALE
-========================== */
+// ========================================
+// ROUTE PRINCIPALE
+// ========================================
 
 app.get("/", (req, res) => {
-  res.send("API Duval Tech opérationnelle");
+  res.status(200).send("API Duval Tech opérationnelle");
 });
 
 
+// ========================================
+// ROUTE DE TEST
+// ========================================
+
+app.get("/test", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "API test OK",
+  });
+});
+
+
+// ========================================
+// SETTINGS
+// ========================================
+
+app.use("/api/settings", settingsRoutes);
+
+
+// ========================================
+// DASHBOARD
+// ========================================
 
 app.use("/api/dashboard", dashboardRoutes);
 
-/* ==========================
-   TEST GET
-========================== */
 
-app.get("/test", (req, res) => {
-  res.send("test ok");
-});
-
-/* ==========================
-   GET TOUS LES PROJETS
-========================== */
+// ========================================
+// PROJECTS - GET
+// ========================================
 
 app.get("/api/projects", async (req, res) => {
-  const { data, error } = await supabase
-    .from("projects")
-    .select("*");
+  try {
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*");
 
-  console.log("DATA =", data);
-  console.log("ERROR =", error);
+    if (error) {
+      console.error("ERREUR SUPABASE PROJECTS :", error);
 
-  if (error) {
-    return res.status(500).json(error);
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
+    res.status(200).json(data);
+  } catch (err) {
+    console.error("ERREUR GET PROJECTS :", err);
+
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
-
-  res.json(data);
 });
 
-/* ==========================
-   AJOUTER PROJET
-========================== */
+
+// ========================================
+// PROJECTS - POST
+// ========================================
 
 app.post("/api/projects", authMiddleware, async (req, res) => {
   try {
@@ -89,7 +122,7 @@ app.post("/api/projects", authMiddleware, async (req, res) => {
       image,
       github,
       demo,
-      technologies
+      technologies,
     } = req.body;
 
     const { data, error } = await supabase
@@ -101,41 +134,37 @@ app.post("/api/projects", authMiddleware, async (req, res) => {
           image,
           github,
           demo,
-          technologies
-        }
+          technologies,
+        },
       ])
       .select();
 
     if (error) {
-      console.log("ERREUR SUPABASE :", error);
-      return res.status(500).json(error);
+      console.error("ERREUR SUPABASE :", error);
+
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
     }
 
     console.log("PROJET AJOUTÉ :", data);
 
     res.status(201).json(data);
-
   } catch (err) {
-    console.error("ERREUR :", err);
+    console.error("ERREUR POST PROJECT :", err);
 
     res.status(500).json({
-      message: err.message
+      success: false,
+      message: err.message,
     });
   }
 });
 
-/* ==========================
-   AUTRES ROUTES
-========================== */
 
-app.use("/api/upload", uploadRoutes);
-app.use("/api/skills", skillsRoutes);
-app.use("/api/messages", messageRoutes);
-app.use("/api/auth", authRoutes);
-
-/* ==========================
-   MODIFIER PROJET
-========================== */
+// ========================================
+// PROJECTS - PUT
+// ========================================
 
 app.put("/api/projects/:id", authMiddleware, async (req, res) => {
   try {
@@ -147,7 +176,7 @@ app.put("/api/projects/:id", authMiddleware, async (req, res) => {
       image,
       github,
       demo,
-      technologies
+      technologies,
     } = req.body;
 
     const { data, error } = await supabase
@@ -158,29 +187,35 @@ app.put("/api/projects/:id", authMiddleware, async (req, res) => {
         image,
         github,
         demo,
-        technologies
+        technologies,
       })
       .eq("id", id)
       .select();
 
     if (error) {
-      return res.status(500).json(error);
+      console.error("ERREUR SUPABASE UPDATE :", error);
+
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
     }
 
-    res.json(data);
-
+    res.status(200).json(data);
   } catch (err) {
-    console.error(err);
+    console.error("ERREUR PUT PROJECT :", err);
 
     res.status(500).json({
-      message: err.message
+      success: false,
+      message: err.message,
     });
   }
 });
 
-/* ==========================
-   SUPPRIMER PROJET
-========================== */
+
+// ========================================
+// PROJECTS - DELETE
+// ========================================
 
 app.delete("/api/projects/:id", authMiddleware, async (req, res) => {
   try {
@@ -192,51 +227,80 @@ app.delete("/api/projects/:id", authMiddleware, async (req, res) => {
       .eq("id", id);
 
     if (error) {
-      return res.status(500).json(error);
+      console.error("ERREUR SUPABASE DELETE :", error);
+
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
     }
 
-    res.json({
-      message: "Projet supprimé avec succès"
+    res.status(200).json({
+      success: true,
+      message: "Projet supprimé avec succès",
     });
-
   } catch (err) {
-    console.error(err);
+    console.error("ERREUR DELETE PROJECT :", err);
 
     res.status(500).json({
-      message: err.message
+      success: false,
+      message: err.message,
     });
   }
 });
-/* ==========================
-   UPLOAD IMAGE
-========================== */
 
+
+// ========================================
+// UPLOAD
+// ========================================
 
 app.use("/api/upload", uploadRoutes);
 
-/* ==========================
-   AUTH
-========================== */
+
+// ========================================
+// AUTH
+// ========================================
 
 app.use("/api/auth", authRoutes);
-/* ==========================
-   MESSAGES
-========================== */
+
+
+// ========================================
+// MESSAGES
+// ========================================
 
 app.use("/api/messages", messageRoutes);
 
-/* ==========================
-   SKILLS ROUTES
-========================== */
+
+// ========================================
+// SKILLS
+// ========================================
 
 app.use("/api/skills", skillsRoutes);
 
-/* ==========================
-   DEMARRAGE SERVEUR
-========================== */
 
-const PORT = 5000;
+// ========================================
+// GESTION DES ERREURS
+// ========================================
 
-app.listen(PORT, () => {
+app.use((err, req, res, next) => {
+  console.error("ERREUR SERVEUR :", err);
+
+  res.status(500).json({
+    success: false,
+    message: err.message || "Erreur interne du serveur.",
+  });
+});
+
+
+// ========================================
+// DEMARRAGE DU SERVEUR
+// ========================================
+
+// Render fournit automatiquement le port
+const PORT = process.env.PORT || 5000;
+
+// IMPORTANT POUR RENDER :
+// écouter sur 0.0.0.0
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Serveur lancé sur le port ${PORT}`);
 });
