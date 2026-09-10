@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const supabase = require("../config/supabase");
 
 // ==========================
 // LOGIN ADMIN
@@ -7,7 +8,6 @@ const bcrypt = require("bcryptjs");
 
 const login = async (req, res) => {
   try {
-
     const { email, password } = req.body;
 
     // ==========================
@@ -15,55 +15,53 @@ const login = async (req, res) => {
     // ==========================
 
     if (!email || !password) {
-
       return res.status(400).json({
-        message: "Email et mot de passe obligatoires."
+        success: false,
+        message: "Email et mot de passe obligatoires.",
       });
-
     }
 
     // ==========================
-    // VARIABLES .ENV
+    // RECHERCHE ADMIN
     // ==========================
 
-    const adminEmail = process.env.ADMIN_EMAIL;
-    const adminPassword = process.env.ADMIN_PASSWORD;
+    const { data: admin, error } = await supabase
+      .from("admins")
+      .select("*")
+      .eq("email", email)
+      .single();
 
-    // ==========================
-    // VERIFICATION EMAIL
-    // ==========================
-
-    if (email !== adminEmail) {
-
+    if (error || !admin) {
       return res.status(401).json({
-        message: "Email ou mot de passe incorrect."
+        success: false,
+        message: "Email ou mot de passe incorrect.",
       });
-
     }
 
     // ==========================
-    // VERIFICATION MOT DE PASSE
+    // VÉRIFICATION MOT DE PASSE
     // ==========================
 
     const isMatch = await bcrypt.compare(
       password,
-      adminPassword
+      admin.password_hash
     );
 
     if (!isMatch) {
-
       return res.status(401).json({
-        message: "Email ou mot de passe incorrect."
+        success: false,
+        message: "Email ou mot de passe incorrect.",
       });
-
     }
-        // ==========================
-    // GENERATION DU TOKEN JWT
+
+    // ==========================
+    // GÉNÉRATION JWT
     // ==========================
 
     const token = jwt.sign(
       {
-        email: adminEmail,
+        id: admin.id,
+        email: admin.email,
         role: "admin",
       },
       process.env.JWT_SECRET,
@@ -73,7 +71,7 @@ const login = async (req, res) => {
     );
 
     // ==========================
-    // REPONSE AccountCard.jsx
+    // RÉPONSE
     // ==========================
 
     return res.status(200).json({
@@ -81,24 +79,140 @@ const login = async (req, res) => {
       message: "Connexion réussie.",
       token,
       admin: {
-       email: adminEmail,
-       role: "Administrateur",
-       status: "Connecté",
+        id: admin.id,
+        email: admin.email,
+        role: "Administrateur",
+        status: "Connecté",
       },
     });
-
   } catch (error) {
-
-    console.error(error);
+    console.error("ERREUR LOGIN :", error);
 
     return res.status(500).json({
       success: false,
       message: "Erreur interne du serveur.",
     });
-
   }
 };
 
+// ==========================
+// CHANGER LE MOT DE PASSE
+// ==========================
+
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    // ==========================
+    // VALIDATION
+    // ==========================
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Tous les champs sont obligatoires.",
+      });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Le nouveau mot de passe doit contenir au moins 8 caractères.",
+      });
+    }
+
+    // ==========================
+    // ADMIN CONNECTÉ
+    // ==========================
+
+    const adminEmail = req.user.email;
+
+    // ==========================
+    // RÉCUPÉRATION ADMIN
+    // ==========================
+
+    const { data: admin, error } = await supabase
+      .from("admins")
+      .select("*")
+      .eq("email", adminEmail)
+      .single();
+
+    if (error || !admin) {
+      return res.status(404).json({
+        success: false,
+        message: "Compte administrateur introuvable.",
+      });
+    }
+
+    // ==========================
+    // VÉRIFICATION ANCIEN MOT DE PASSE
+    // ==========================
+
+    const isMatch = await bcrypt.compare(
+      currentPassword,
+      admin.password_hash
+    );
+
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Le mot de passe actuel est incorrect.",
+      });
+    }
+
+    // ==========================
+    // HASH NOUVEAU MOT DE PASSE
+    // ==========================
+
+    const newPasswordHash = await bcrypt.hash(
+      newPassword,
+      12
+    );
+
+    // ==========================
+    // MISE À JOUR SUPABASE
+    // ==========================
+
+    const { error: updateError } = await supabase
+      .from("admins")
+      .update({
+        password_hash: newPasswordHash,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", admin.id);
+
+    if (updateError) {
+      console.error(
+        "ERREUR UPDATE PASSWORD :",
+        updateError
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: "Impossible de modifier le mot de passe.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Mot de passe modifié avec succès.",
+    });
+  } catch (error) {
+    console.error("ERREUR CHANGE PASSWORD :", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Erreur interne du serveur.",
+    });
+  }
+};
+
+// ==========================
+// EXPORTS
+// ==========================
+
 module.exports = {
   login,
+  changePassword,
 };
