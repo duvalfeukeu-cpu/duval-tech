@@ -143,7 +143,7 @@ const { settings } = useSettings();
     <br />
 
     <span className="text-blue-400">
-        & Fondateur de Dev-Elites
+        & Fondateur de cercle Tech
     </span>
    </h2>
 
@@ -369,7 +369,7 @@ const { settings } = useSettings();
         </p>
 
         <p className="font-semibold text-white">
-            Node.js 🚀
+            Node.js 
         </p>
 
     </motion.div>

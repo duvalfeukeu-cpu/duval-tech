@@ -363,19 +363,19 @@ const About = () => {
                 title: "Projets",
             },
             {
-                end: 1000,
-                suffix: "+",
-                title: "YouTube",
-            },
-            {
                 end: 200,
                 suffix: "+",
                 title: "Facebook",
             },
             {
+                end: 200,
+                suffix: "+",
+                title: "tiktok",
+            },
+            {
                 end: 1,
                 suffix: "",
-                title: "Dev-Elites",
+                title: "Cercle-tech",
             },
         ].map((item, index) => (
 
