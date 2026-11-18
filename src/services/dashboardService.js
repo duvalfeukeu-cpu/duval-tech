@@ -2,10 +2,16 @@ const API =
     import.meta.env.VITE_API_URL ||
     "http://localhost:5000";
 
+// Jeton de l'administrateur connecté (routes /api/dashboard protégées)
+const authHeaders = () => ({
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+});
+
 export const getDashboardStats = async () => {
 
     const response = await fetch(
-        `${API}/api/dashboard/stats`
+        `${API}/api/dashboard/stats`,
+        { headers: authHeaders() }
     );
 
     const data = await response.json();
@@ -25,7 +31,8 @@ export const getDashboardStats = async () => {
 export const getRecentProjects = async () => {
 
     const response = await fetch(
-        `${API}/api/dashboard/recent-projects`
+        `${API}/api/dashboard/recent-projects`,
+        { headers: authHeaders() }
     );
 
     const data = await response.json();
@@ -45,7 +52,8 @@ export const getRecentProjects = async () => {
 export const getRecentMessages = async () => {
 
     const response = await fetch(
-        `${API}/api/dashboard/recent-messages`
+        `${API}/api/dashboard/recent-messages`,
+        { headers: authHeaders() }
     );
 
     const data = await response.json();
@@ -65,7 +73,8 @@ export const getRecentMessages = async () => {
 export const getRecentActivity = async () => {
 
     const response = await fetch(
-        `${API}/api/dashboard/recent-activity`
+        `${API}/api/dashboard/recent-activity`,
+        { headers: authHeaders() }
     );
 
     const data = await response.json();

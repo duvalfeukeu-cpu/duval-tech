@@ -13,6 +13,7 @@ const messageRoutes = require("./routes/messagesRoutes");
 const authRoutes = require("./routes/authRoutes");
 
 const authMiddleware = require("./middlewares/authMiddleware");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 
@@ -21,12 +22,50 @@ const app = express();
 // CONFIGURATION
 // ========================================
 
+// Seuls ces sites peuvent appeler l'API depuis un navigateur.
+// Pour en ajouter : variable ALLOWED_ORIGINS sur Render (séparées par des virgules).
+const allowedOrigins = (
+  process.env.ALLOWED_ORIGINS ||
+  "https://duvalfeukeu.netlify.app,http://localhost:5173"
+)
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+
 app.use(
   cors({
-    origin: true,
+    origin(origin, callback) {
+      // Requêtes sans origine (Postman, serveur à serveur, Render health check)
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(null, false);
+    },
     credentials: true,
   })
 );
+
+// Render est derrière un proxy : nécessaire pour identifier la vraie IP
+app.set("trust proxy", 1);
+
+// Anti force brute : 5 tentatives de connexion ratées / 15 min / IP
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  skipSuccessfulRequests: true,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { success: false, message: "Trop de tentatives. Réessayez dans 15 minutes." },
+});
+
+// Anti spam du formulaire de contact : 5 messages / heure / IP
+const contactLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 5,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { success: false, message: "Trop de messages envoyés. Réessayez plus tard." },
+});
 
 app.use(express.json());
 
@@ -73,7 +112,8 @@ app.use("/api/settings", settingsRoutes);
 // DASHBOARD
 // ========================================
 
-app.use("/api/dashboard", dashboardRoutes);
+// Tableau de bord : réservé à l'administrateur (contient les messages des visiteurs)
+app.use("/api/dashboard", authMiddleware, dashboardRoutes);
 
 
 // ========================================
@@ -254,13 +294,15 @@ app.delete("/api/projects/:id", authMiddleware, async (req, res) => {
 // UPLOAD
 // ========================================
 
-app.use("/api/upload", uploadRoutes);
+// Upload Cloudinary : réservé à l'administrateur
+app.use("/api/upload", authMiddleware, uploadRoutes);
 
 
 // ========================================
 // AUTH
 // ========================================
 
+app.use("/api/auth/login", loginLimiter);
 app.use("/api/auth", authRoutes);
 
 
@@ -268,6 +310,7 @@ app.use("/api/auth", authRoutes);
 // MESSAGES
 // ========================================
 
+app.use("/api/messages", (req, res, next) => (req.method === "POST" ? contactLimiter(req, res, next) : next()));
 app.use("/api/messages", messageRoutes);
 
 

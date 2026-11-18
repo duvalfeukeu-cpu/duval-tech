@@ -1,4 +1,5 @@
 import { optimizeCloudinary } from "../../utils/cloudinary";
+import defaultAvatar from "../../assets/images/duval.png";
 import { motion } from "framer-motion";
 import { useSettings } from "../../contexts/SettingsContext";
 
@@ -282,7 +283,7 @@ const { settings } = useSettings();
     src={
         settings?.avatar
             ? optimizeCloudinary(settings.avatar, 900)
-            : "https://via.placeholder.com/440x560?text=Duval+Tech"
+            : defaultAvatar
     }
     alt={settings?.fullname || "Duval Tech"}
     loading="eager"

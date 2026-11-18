@@ -8,7 +8,7 @@ import {
     Sparkles,
 } from "lucide-react";
 
-const API = "https://duval-tech-api.onrender.com/api/skills";
+const API = `${import.meta.env.VITE_API_URL}/api/skills`;
 
 const Skills = () => {
 
@@ -29,7 +29,7 @@ const Skills = () => {
 
                 const data = await response.json();
 
-                setSkills(data);
+                setSkills(Array.isArray(data) ? data : []);
 
             } catch (error) {
 

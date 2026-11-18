@@ -101,6 +101,9 @@ const ProjectModal = ({
 
       const response = await fetch(UPLOAD_API, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
         body: formData,
       });
 

@@ -7,20 +7,36 @@ import {
     Layers3,
 } from "lucide-react";
 
+const API = `${import.meta.env.VITE_API_URL}/api/projects`;
+
+// Accepte "React, Node" (texte) comme ["React", "Node"] (tableau)
+const toTechList = (technologies) => {
+    if (Array.isArray(technologies)) return technologies.map(String);
+    if (typeof technologies === "string") return technologies.split(",");
+    return [];
+};
+
 const Projects = () => {
     const [projects, setProjects] = useState([]);
 
-   useEffect(() => {
-   fetch("https://duval-tech-api.onrender.com/api/projects")
-        .then((res) => res.json())
-        .then((data) => {
-            console.log("PROJETS RECUS =", data);
-            setProjects(data);
-        })
-        .catch((err) => {
-            console.error("Erreur :", err);
-        });
-}, []);
+    useEffect(() => {
+        fetch(API)
+            .then(async (res) => {
+                const data = await res.json().catch(() => null);
+                if (!res.ok) {
+                    throw new Error(data?.message || `Erreur API (${res.status})`);
+                }
+                return data;
+            })
+            .then((data) => {
+                // On n'affiche que si l'API renvoie bien une liste
+                setProjects(Array.isArray(data) ? data : []);
+            })
+            .catch((err) => {
+                console.error("Erreur lors du chargement des projets :", err);
+                setProjects([]);
+            });
+    }, []);
 
 return (
     <section
@@ -204,8 +220,7 @@ return (
                                     gap-2
                                     mt-6
                                 "
-                            >                                {project.technologies
-                                    ?.split(",")
+                            >                                {toTechList(project.technologies)
                                     .map((tech, i) => (
                                         <span
                                             key={i}

@@ -52,6 +52,9 @@ const ProfileCard = ({
       const uploadResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/upload`,
         {
           method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
           body: formData,
         }
       );

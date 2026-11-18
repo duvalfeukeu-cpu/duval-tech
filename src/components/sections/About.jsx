@@ -3,6 +3,7 @@ import AnimatedCounter from "../common/AnimatedCounter";
 
 import { useSettings } from "../../contexts/SettingsContext";
 import { optimizeCloudinary } from "../../utils/cloudinary";
+import defaultAvatar from "../../assets/images/duval.png";
 
 const About = () => {
 
@@ -150,7 +151,7 @@ const About = () => {
     src={
         settings?.avatar
             ? optimizeCloudinary(settings.avatar, 700)
-            : "https://via.placeholder.com/470x620"
+            : defaultAvatar
     }
     alt={settings?.fullname || "Feukeu Duval"}
     loading="lazy"
